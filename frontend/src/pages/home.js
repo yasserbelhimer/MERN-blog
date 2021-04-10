@@ -1,10 +1,17 @@
 import PostLg from "../components/post-lg";
-const home = (props) => {
+import { connect } from "react-redux";
+import { fetchPosts } from "../actions/postActions";
+import { useEffect } from "react";
+const Home = (props) => {
+	useEffect(() => {
+		props.fetchPosts();
+	}, []);
 	return (
 		<div id="main">
-			<PostLg />
-			<PostLg />
-			<PostLg />
+			{props.posts.map((post) => (
+				<PostLg />
+			))}
+
 			{/* Pagination */}
 			<ul className="actions pagination">
 				<li>
@@ -21,4 +28,13 @@ const home = (props) => {
 		</div>
 	);
 };
-export default home;
+const mapState = (state) => ({
+	posts: state.posts.items,
+	loading: state.posts.loading,
+	error: state.posts.error,
+});
+
+const mapDispatchToProps = {
+	fetchPosts,
+};
+export default connect(mapState, mapDispatchToProps)(Home);
